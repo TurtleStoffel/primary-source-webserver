@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
+import { ensureDir } from "https://deno.land/std@0.224.0/fs/mod.ts";
 
-const SOURCES_FILE = "sources.md";
+const SOURCES_DIR = "sources";
 
 async function handler(req: Request): Promise<Response> {
   if (req.method === "POST" && req.url.endsWith("/add-source")) {
@@ -13,9 +14,12 @@ async function handler(req: Request): Promise<Response> {
         });
       }
 
+      await ensureDir(SOURCES_DIR); // Ensure the directory exists
+
+      const uniqueFilename = `${SOURCES_DIR}/${crypto.randomUUID()}.md`;
       const markdownContent = `## Source\n\n- **URL:** ${url}\n- **Description:** ${description}\n\n---\n\n`;
 
-      await Deno.writeTextFile(SOURCES_FILE, markdownContent, { append: true });
+      await Deno.writeTextFile(uniqueFilename, markdownContent); // No append, each is a new file
 
       return new Response("Source added successfully!", { status: 200 });
     } catch (error: unknown) {
