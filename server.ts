@@ -16,7 +16,7 @@ async function handler(req: Request): Promise<Response> {
       await ensureDir(CONFIG.SOURCES_DIR); // Ensure the directory exists
 
       const uniqueFilename = `${CONFIG.SOURCES_DIR}/${crypto.randomUUID()}.md`;
-      const markdownContent = `## Source\n\n- **URL:** ${url}\n- **Description:** ${description}\n\n---\n\n`;
+      const markdownContent = `## Source\n\n- **URL:** ${url}\n- **Description:** ${description}\n\n`;
 
       await Deno.writeTextFile(uniqueFilename, markdownContent); // No append, each is a new file
 
